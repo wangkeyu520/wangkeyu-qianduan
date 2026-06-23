@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useReviewStore } from '../stores/reviewStore'
+import { STORE_INFO, STORE_HIGHLIGHTS, REVIEW_EXAMPLES } from '../constants/tags'
 import { Sunny, StarFilled, MagicStick, ArrowRight, InfoFilled } from '@element-plus/icons-vue'
 
 const store = useReviewStore()
@@ -14,7 +15,7 @@ onMounted(() => {
       left: Math.random() * 100,
       delay: Math.random() * 5,
       size: 8 + Math.random() * 16,
-      duration: 8 + Math.random() * 8
+      duration: 8 + Math.random() * 8,
     })
   }
 })
@@ -22,33 +23,29 @@ onMounted(() => {
 const handleStart = () => {
   store.navigateTo('select')
 }
-
-const hotReviews = [
-  { user: '小仙女', avatar: '🌸', text: '超好喝！颜值也高！', stars: 5 },
-  { user: 'Lisa', avatar: '🦄', text: 'Best milk tea ever!', stars: 5 },
-  { user: 'Tom', avatar: '🐱', text: '服务很棒，下次还来', stars: 5 },
-]
 </script>
 
 <template>
   <div class="home-page">
     <div class="bg-decoration">
-      <div class="bubble" v-for="bubble in floatingBubbles" :key="bubble.id"
-           :style="{
-             left: bubble.left + '%',
-             width: bubble.size + 'px',
-             height: bubble.size + 'px',
-             animationDelay: bubble.delay + 's',
-             animationDuration: bubble.duration + 's'
-           }">
-      </div>
+      <div
+        v-for="bubble in floatingBubbles"
+        :key="bubble.id"
+        class="bubble"
+        :style="{
+          left: bubble.left + '%',
+          width: bubble.size + 'px',
+          height: bubble.size + 'px',
+          animationDelay: bubble.delay + 's',
+          animationDuration: bubble.duration + 's',
+        }" />
     </div>
 
     <div class="page-content">
       <div class="hero-section">
         <div class="badge-top">
           <el-icon class="badge-icon"><Sunny /></el-icon>
-          <span>AI 智能评价助手 · 全新上线</span>
+          <span>AI 智能评价助手</span>
         </div>
 
         <div class="cup-wrapper">
@@ -58,13 +55,13 @@ const hotReviews = [
           </div>
           <div class="rating-pill">
             <el-icon class="star-icon"><StarFilled /></el-icon>
-            <span>4.9</span>
+            <span>{{ STORE_INFO.rating }}</span>
           </div>
           <div class="cup-shadow"></div>
         </div>
 
-        <h1 class="hero-title">Sunny Tea House</h1>
-        <p class="hero-subtitle">San Jose · 一杯好茶，值得被看见</p>
+        <h1 class="hero-title">{{ STORE_INFO.name }}</h1>
+        <p class="hero-subtitle">{{ STORE_INFO.location }} · 一杯好茶，值得被看见</p>
 
         <div class="tags-row">
           <span class="tag-chip">🍃 鲜奶现煮</span>
@@ -74,53 +71,42 @@ const hotReviews = [
       </div>
 
       <div class="stats-card">
-        <div class="stats-header">
-          <el-avatar-group :max="4" :size="32">
-            <el-avatar style="background: linear-gradient(135deg, #f472b6, #ec4899)">M</el-avatar>
-            <el-avatar style="background: linear-gradient(135deg, #60a5fa, #3b82f6)">L</el-avatar>
-            <el-avatar style="background: linear-gradient(135deg, #4ade80, #22c55e)">W</el-avatar>
-            <el-avatar style="background: linear-gradient(135deg, #a78bfa, #8b5cf6)">+</el-avatar>
-          </el-avatar-group>
-          <div class="stats-text">
-            <p class="stats-title">今日已有 <span class="highlight">2,847</span> 位顾客评价</p>
-            <p class="stats-desc">⭐⭐⭐⭐⭐ 好评率 98%</p>
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
+        <p class="stats-intro">店铺信息</p>
         <div class="stats-grid">
-          <div class="stat-item">
-            <div class="stat-value">98%</div>
-            <div class="stat-label">推荐率</div>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <div class="stat-value">500<span class="stat-unit">+</span></div>
-            <div class="stat-label">饮品种类</div>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <div class="stat-value">12<span class="stat-unit">h</span></div>
-            <div class="stat-label">营业时长</div>
+          <div
+            v-for="item in STORE_HIGHLIGHTS"
+            :key="item.label"
+            class="stat-item">
+            <div class="stat-icon">{{ item.icon }}</div>
+            <div class="stat-value">{{ item.value }}</div>
+            <div class="stat-label">{{ item.label }}</div>
           </div>
         </div>
       </div>
 
       <div class="hot-reviews">
         <div class="section-header">
-          <h3 class="section-title">真实顾客评价</h3>
-          <span class="section-badge">实时</span>
+          <div>
+            <h3 class="section-title">评价灵感示例</h3>
+            <p class="section-note">风格参考，非真实用户评价</p>
+          </div>
+          <span class="section-badge">示例</span>
         </div>
 
         <div class="review-list">
-          <div class="review-item" v-for="(review, idx) in hotReviews" :key="idx">
+          <div
+            v-for="(review, idx) in REVIEW_EXAMPLES"
+            :key="idx"
+            class="review-item">
             <div class="review-avatar">{{ review.avatar }}</div>
             <div class="review-content">
               <div class="review-header">
                 <span class="review-user">{{ review.user }}</span>
                 <div class="review-stars">
-                  <el-icon v-for="i in review.stars" :key="i" class="star-icon"><StarFilled /></el-icon>
+                  <el-icon
+                    v-for="i in review.stars"
+                    :key="i"
+                    class="star-icon"><StarFilled /></el-icon>
                 </div>
               </div>
               <p class="review-text">{{ review.text }}</p>
@@ -164,9 +150,8 @@ const hotReviews = [
 
       <div class="footer-tips">
         <el-icon class="tip-icon"><InfoFilled /></el-icon>
-        <span>由阿里云百炼 qwen-plus 驱动 · v2.0</span>
+        <span>由阿里云百炼 qwen-plus 提供 AI 能力</span>
       </div>
-      <p class="version-tag">页面已更新 2025.06</p>
     </div>
   </div>
 </template>
@@ -183,10 +168,7 @@ const hotReviews = [
 
 .bg-decoration {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   pointer-events: none;
   overflow: hidden;
 }
@@ -201,20 +183,10 @@ const hotReviews = [
 }
 
 @keyframes float-up {
-  0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.6;
-  }
-  90% {
-    opacity: 0.6;
-  }
-  100% {
-    transform: translateY(-100vh) rotate(360deg);
-    opacity: 0;
-  }
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
 }
 
 .page-content {
@@ -268,14 +240,8 @@ const hotReviews = [
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.1);
-    opacity: 0.8;
-  }
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
 }
 
 .cup-container {
@@ -287,7 +253,7 @@ const hotReviews = [
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 
+  box-shadow:
     0 10px 30px rgba(245, 158, 11, 0.4),
     inset 0 -4px 8px rgba(217, 119, 6, 0.3),
     inset 0 4px 8px rgba(252, 211, 77, 0.5);
@@ -334,18 +300,14 @@ const hotReviews = [
 }
 
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 .hero-title {
   font-size: 32px;
   font-weight: 800;
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
   background: linear-gradient(135deg, #c9994b 0%, #f59e0b 50%, #d97706 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -356,7 +318,7 @@ const hotReviews = [
 .hero-subtitle {
   color: #93632c;
   font-size: 14px;
-  margin: 0 0 16px 0;
+  margin: 0 0 16px;
   font-weight: 500;
 }
 
@@ -388,79 +350,44 @@ const hotReviews = [
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.stats-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.stats-text {
-  flex: 1;
-}
-
-.stats-title {
+.stats-intro {
+  font-size: 14px;
   font-weight: 600;
   color: #775029;
-  font-size: 14px;
-  margin: 0 0 4px 0;
-}
-
-.highlight {
-  color: #f59e0b;
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.stats-desc {
-  color: #93632c;
-  font-size: 12px;
-  margin: 0;
-}
-
-.divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201, 153, 75, 0.2), transparent);
-  margin: 16px 0;
-}
-
-.stats-grid {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.stat-item {
-  flex: 1;
+  margin: 0 0 16px;
   text-align: center;
 }
 
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 12px 8px;
+  background: rgba(252, 211, 77, 0.08);
+  border-radius: 12px;
+  border: 1px solid rgba(201, 153, 75, 0.12);
+}
+
+.stat-icon {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
 .stat-value {
-  font-size: 24px;
+  font-size: 15px;
   font-weight: 700;
   color: #c9994b;
   margin-bottom: 4px;
-  background: linear-gradient(135deg, #c9994b, #f59e0b);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.stat-unit {
-  font-size: 16px;
-  color: #d97706;
 }
 
 .stat-label {
-  font-size: 12px;
+  font-size: 11px;
   color: #93632c;
   font-weight: 500;
-}
-
-.stat-divider {
-  width: 1px;
-  height: 30px;
-  background: rgba(201, 153, 75, 0.2);
 }
 
 .hot-reviews {
@@ -476,7 +403,7 @@ const hotReviews = [
 .section-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 16px;
 }
 
@@ -484,16 +411,24 @@ const hotReviews = [
   font-size: 16px;
   font-weight: 700;
   color: #775029;
+  margin: 0 0 4px;
+}
+
+.section-note {
+  font-size: 11px;
+  color: #93632c;
   margin: 0;
+  opacity: 0.8;
 }
 
 .section-badge {
   padding: 2px 8px;
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
+  background: rgba(201, 153, 75, 0.15);
+  color: #93632c;
   font-size: 10px;
   font-weight: 600;
   border-radius: 8px;
+  flex-shrink: 0;
 }
 
 .review-list {
@@ -510,12 +445,6 @@ const hotReviews = [
   background: rgba(252, 211, 77, 0.1);
   border-radius: 12px;
   border: 1px solid rgba(252, 211, 77, 0.2);
-  transition: all 0.3s;
-}
-
-.review-item:hover {
-  transform: translateX(4px);
-  background: rgba(252, 211, 77, 0.15);
 }
 
 .review-avatar {
@@ -637,8 +566,7 @@ const hotReviews = [
   color: #c9994b;
   font-size: 20px;
   font-weight: 700;
-  margin: 0 8px;
-  margin-bottom: 20px;
+  margin: 0 8px 20px;
 }
 
 .start-button {
@@ -655,49 +583,26 @@ const hotReviews = [
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 
-    0 8px 24px rgba(245, 158, 11, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  position: relative;
-  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
   transition: all 0.3s ease;
-  letter-spacing: 0.5px;
-}
-
-.start-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.6s;
 }
 
 .start-button:hover {
   transform: translateY(-2px);
-  box-shadow: 
-    0 12px 32px rgba(245, 158, 11, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.start-button:hover::before {
-  left: 100%;
+  box-shadow: 0 12px 32px rgba(245, 158, 11, 0.5);
 }
 
 .start-button:active {
   transform: translateY(0);
 }
 
-.btn-text {
+.btn-text,
+.btn-icon-wrapper {
   position: relative;
   z-index: 1;
 }
 
 .btn-icon-wrapper {
-  position: relative;
-  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -725,14 +630,5 @@ const hotReviews = [
 
 .tip-icon {
   font-size: 12px;
-}
-
-.version-tag {
-  text-align: center;
-  margin-top: 8px;
-  font-size: 10px;
-  color: #c9994b;
-  opacity: 0.6;
-  letter-spacing: 0.5px;
 }
 </style>

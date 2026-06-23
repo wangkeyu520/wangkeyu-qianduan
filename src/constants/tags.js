@@ -43,3 +43,15 @@ export const STORE_INFO = {
   location: 'San Jose',
   rating: 4.8,
 }
+
+export const STORE_HIGHLIGHTS = [
+  { icon: '📍', label: '门店位置', value: STORE_INFO.location },
+  { icon: '⭐', label: '店铺评分', value: String(STORE_INFO.rating) },
+  { icon: '🧋', label: '主打产品', value: '鲜煮奶茶' },
+]
+
+export const REVIEW_EXAMPLES = [
+  { user: '示例 · 中文', avatar: '🌸', text: '服务贴心，饮品好看又好喝！', stars: 5 },
+  { user: 'Sample · EN', avatar: '🦄', text: 'Great drinks and friendly staff!', stars: 5 },
+  { user: '示例 · 种草', avatar: '🐱', text: '环境舒服，适合拍照打卡～', stars: 5 },
+]
